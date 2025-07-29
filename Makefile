@@ -1,6 +1,6 @@
 -include .env
 
-all : install build
+all : install fbuild
 
 install :; forge soldeer install
 
@@ -17,5 +17,3 @@ ftest :; forge test
 snapshot :; forge snapshot
 
 anvil :; anvil -m 'test test test test test test test test test test test junk' --steps-tracing --block-time 1
-
-precommit :; forge fmt && git add .
