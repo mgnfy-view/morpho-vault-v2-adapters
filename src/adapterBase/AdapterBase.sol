@@ -17,14 +17,13 @@ import { SanityChecks } from "@src/utils/SanityChecks.sol";
 abstract contract AdapterBase is IAdapterBase {
     using SafeERC20 for IERC20;
     using SanityChecks for address;
-    using SanityChecks for uint256;
 
     /// @dev The factory that deployed this contract.
     address internal immutable i_factory;
     /// @dev The Morpho vault v2 contract.
     IVaultV2 internal immutable i_morphoVaultV2;
     /// @dev The asset accepted by the Morpho vault
-    address internal immutable i_asset;
+    IERC20 internal immutable i_asset;
     /// @dev A unique identifier for this adapter.
     bytes32 internal immutable i_adapterId;
     /// @dev Address that can skim tokens sent to this contract. These tokens may be
@@ -33,15 +32,15 @@ abstract contract AdapterBase is IAdapterBase {
     /// to the vault depositors.
     address internal s_skimRecipient;
 
-    /// @notice Initializes the contract.
+    /// @dev Initializes the contract.
     /// @param _morphoVaultV2 The morpho vault v2 instance this adapter is attached to.
-    /// @param _initialSkimRecipient The initial skm recipient address.
-    constructor(address _morphoVaultV2, address _initialSkimRecipient) {
+    constructor(address _morphoVaultV2) {
         i_factory = msg.sender;
         i_morphoVaultV2 = IVaultV2(_morphoVaultV2);
-        i_asset = i_morphoVaultV2.asset();
+        i_asset = IERC20(i_morphoVaultV2.asset());
         i_adapterId = keccak256(abi.encode("this", address(this)));
-        s_skimRecipient = _initialSkimRecipient;
+
+        i_asset.approve(_morphoVaultV2, type(uint256).max);
     }
 
     /// @notice Sets the new skim recipient.
@@ -109,7 +108,7 @@ abstract contract AdapterBase is IAdapterBase {
     /// @notice Gets the asset accepted by the vault.
     /// @return The asset address.
     function getAsset() external view returns (address) {
-        return i_asset;
+        return address(i_asset);
     }
 
     /// @notice Gets the adapter ID.
