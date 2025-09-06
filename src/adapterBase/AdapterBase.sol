@@ -69,22 +69,29 @@ abstract contract AdapterBase is IAdapterBase {
         emit Skimmed(_token, balance);
     }
 
-    /// @notice Reverts if the caller is not the vault owner.
+    /// @dev Reverts if the caller is not Morpho vault v2 instance this adapter
+    /// is attached to.
+    /// @param _caller The caller address.
+    function _requireCallerIsMorphoVault(address _caller) internal view {
+        if (_caller != address(i_morphoVaultV2)) revert AdapterBase__NotMorphoVault();
+    }
+
+    /// @dev Reverts if the caller is not the vault owner.
     /// @param _caller The caller address.
     function _requireCallerIsMorphoVaultV2Owner(address _caller) internal view {
         if (_caller != i_morphoVaultV2.owner()) revert AdapterBase__NotMorphoVaultV2Owner();
     }
 
-    /// @notice Reverts if the caller is not the skim recipient.
-    /// @param _caller The caller address.
-    function _requireCallerIsSkimRecipient(address _caller) internal view {
-        if (_caller != s_skimRecipient) revert AdapterBase__NotSkimRecipient();
-    }
-
-    /// @notice Reverts if the `_asset` is not the asset accepted by the vault.
+    /// @dev Reverts if the `_asset` is not the asset accepted by the vault.
     /// @param _asset The asset address.
     function _requireIsAcceptedAsset(address _asset) internal view {
         if (_asset != i_morphoVaultV2.asset()) revert AdapterBase__NotAcceptedAsset();
+    }
+
+    /// @dev Reverts if the caller is not the skim recipient.
+    /// @param _caller The caller address.
+    function _requireCallerIsSkimRecipient(address _caller) internal view {
+        if (_caller != s_skimRecipient) revert AdapterBase__NotSkimRecipient();
     }
 
     /// @notice Gets the factory address that deployed this vault.

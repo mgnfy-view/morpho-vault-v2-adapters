@@ -10,9 +10,10 @@ interface IAdapterBase is IMorphoVaultV2Adapter {
     event SkimRecipientSet(address indexed newSkimRecipient);
     event Skimmed(address indexed token, uint256 indexed balance);
 
+    error AdapterBase__NotMorphoVault();
     error AdapterBase__NotMorphoVaultV2Owner();
-    error AdapterBase__NotSkimRecipient();
     error AdapterBase__NotAcceptedAsset();
+    error AdapterBase__NotSkimRecipient();
 
     function setSkimRecipient(address _newSkimRecipient) external;
     function skim(address _token) external;
