@@ -15,6 +15,6 @@ tab_width = 4
 [dependencies]
 forge-std = "1.9.7"
 "@openzeppelin-contracts" = "5.3.0"
-morpho-vault-v2 = { version = "1.0.0", git = "https://github.com/morpho-org/vault-v2", rev = "3f0959eda93b6d17c6d5881483f12687db581e1a" }
+morpho-vault-v2 = { version = "1.0.0", git = "https://github.com/morpho-org/vault-v2", rev = "275c2f9cbe6d79e8e4712497dc3cb51cc70f786f" }
 
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
