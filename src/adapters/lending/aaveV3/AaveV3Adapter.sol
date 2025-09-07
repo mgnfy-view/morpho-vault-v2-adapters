@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import { IAaveV3Adapter } from "@src/lending/aaveV3/interfaces/IAaveV3Adapter.sol";
-import { IAToken } from "@src/lending/aaveV3/lib/interfaces/IAToken.sol";
-import { IPool } from "@src/lending/aaveV3/lib/interfaces/IPool.sol";
+import { IAaveV3Adapter } from "@src/adapters/lending/aaveV3/interfaces/IAaveV3Adapter.sol";
+import { IAToken } from "@src/adapters/lending/aaveV3/lib/interfaces/IAToken.sol";
+import { IPool } from "@src/adapters/lending/aaveV3/lib/interfaces/IPool.sol";
 
-import { IPoolAddressesProviderRegistry } from "@src/lending/aaveV3/lib/interfaces/IPoolAddressesProviderRegistry.sol";
+import { IPoolAddressesProviderRegistry } from
+    "@src/adapters/lending/aaveV3/lib/interfaces/IPoolAddressesProviderRegistry.sol";
 
 import { AdapterBase } from "@src/adapterBase/AdapterBase.sol";
 

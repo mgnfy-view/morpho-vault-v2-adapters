@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import { IAaveV3AdapterFactory } from "@src/lending/aaveV3/interfaces/IAaveV3AdapterFactory.sol";
+import { IAaveV3AdapterFactory } from "@src/adapters/lending/aaveV3/interfaces/IAaveV3AdapterFactory.sol";
 
-import { AaveV3Adapter } from "@src/lending/aaveV3/AaveV3Adapter.sol";
+import { AaveV3Adapter } from "@src/adapters/lending/aaveV3/AaveV3Adapter.sol";
 
 /// @title AaveV3AdapterFactory.
 /// @author mgnfy-view.
