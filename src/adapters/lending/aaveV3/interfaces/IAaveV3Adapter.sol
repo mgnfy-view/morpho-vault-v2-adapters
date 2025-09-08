@@ -12,5 +12,5 @@ interface IAaveV3Adapter is IAdapterBase {
     function getPoolAddressesProviderRegistry() external view returns (address);
     function getPool(uint256 _index) external view returns (address);
     function getIds(address _pool) external view returns (bytes32[] memory);
-    function allocation(address _pool) external view returns (uint256);
+    function getAllocation(address _pool) external view returns (uint256);
 }

@@ -54,7 +54,7 @@ contract AaveV3Adapter is AdapterBase, IAaveV3Adapter {
             pool.supply(address(i_asset), _assets, address(this), 0);
         }
 
-        uint256 oldAllocation = allocation(address(pool));
+        uint256 oldAllocation = getAllocation(address(pool));
         uint256 newAllocation = aToken.balanceOf(address(this));
         _updatePoolsList(pool, oldAllocation, newAllocation);
 
@@ -86,7 +86,7 @@ contract AaveV3Adapter is AdapterBase, IAaveV3Adapter {
             pool.withdraw(address(i_asset), _assets, address(this));
         }
 
-        uint256 oldAllocation = allocation(address(pool));
+        uint256 oldAllocation = getAllocation(address(pool));
         uint256 newAllocation = aToken.balanceOf(address(this));
         _updatePoolsList(pool, oldAllocation, newAllocation);
 
@@ -178,7 +178,7 @@ contract AaveV3Adapter is AdapterBase, IAaveV3Adapter {
     /// @notice Gets the assets allocated to the given Aave v3 pool.
     /// @param _pool The Aave v3 pool address.
     /// @return The amount allocated to the pool.
-    function allocation(address _pool) public view returns (uint256) {
+    function getAllocation(address _pool) public view returns (uint256) {
         return i_morphoVaultV2.allocation(getIds(_pool)[1]);
     }
 }
