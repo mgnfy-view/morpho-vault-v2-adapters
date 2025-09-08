@@ -1,52 +1,67 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import { IERC20 } from "@openzeppelin-contracts-5.3.0/token/ERC20/IERC20.sol";
-import { IPool } from "@src/adapters/lending/aaveV3/lib/interfaces/IPool.sol";
+import { IAToken } from "@src/adapters/lending/aaveV3/lib/interfaces/IAToken.sol";
 
-import { AaveV3Adapter } from "@src/adapters/lending/aaveV3/AaveV3Adapter.sol";
-import { BaseTest } from "@test/BaseTest.sol";
+import { IAdapterBase } from "@src/adapterBase/interfaces/IAdapterBase.sol";
+import { IAaveV3Adapter } from "@src/adapters/lending/aaveV3/interfaces/IAaveV3Adapter.sol";
+import { IOwnable } from "@test/utils/interfaces/IOwnable.sol";
 
-contract AaveV3AdapterAllocateTests is BaseTest {
-    IERC20 internal s_asset;
-    address internal s_poolAddressesProviderRegistry;
-    IPool internal s_pool;
-    AaveV3Adapter internal s_adapter;
+import { AaveV3AdapterBaseTest } from "@test/lending/aaveV3/utils/AaveV3AdapterBaseTest.sol";
+
+contract AaveV3AdapterAllocateTests is AaveV3AdapterBaseTest {
+    bytes internal s_data;
+    uint256 internal s_amount;
+    uint256 internal s_usdcDelta;
 
     function setUp() public override {
         super.setUp();
 
-        string memory rpcUrl = vm.envString("ETHEREUM_MAINNET_RPC_URL");
-        vm.createSelectFork(rpcUrl);
-
-        s_asset = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48); // USDC on Ethereum Mainnet
-        // These Aave v3 associated addresses have been obtained from https://aave.com/docs/resources/addresses
-        s_poolAddressesProviderRegistry = 0xbaA999AC55EAce41CcAE355c77809e68Bb345170;
-        s_pool = IPool(0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2);
-
-        bytes[] memory ids = new bytes[](2);
-        ids[0] = abi.encodePacked();
-        ids[1] = abi.encodePacked();
-        uint256[] memory absoluteCaps = new uint256[](2);
-        absoluteCaps[0] = 0;
-        absoluteCaps[1] = 0;
-        uint256[] memory relativeCaps = new uint256[](2);
-        relativeCaps[0] = 0;
-        relativeCaps[1] = 0;
-        VaultV2InitializationParams memory initializationParams = VaultV2InitializationParams({
-            asset: address(s_asset),
-            ids: ids,
-            absoluteCaps: absoluteCaps,
-            relativeCaps: relativeCaps
-        });
-
-        _deployMorphoVaultV2Instance(initializationParams);
-
-        s_adapter = new AaveV3Adapter(address(s_vault), s_poolAddressesProviderRegistry);
-        _setAdapter(address(s_adapter));
+        s_data = abi.encode(address(s_pool));
+        s_amount = 10_000 * s_assetDecimalsScalingFactor;
+        s_usdcDelta = (1 * s_assetDecimalsScalingFactor) / 100;
     }
 
-    function test_healthCheck() external {
-        assertTrue(true);
+    function test_onlyParentVaultCanAllocate() external {
+        vm.prank(s_allocator);
+        vm.expectRevert(IAdapterBase.AdapterBase__NotMorphoVault.selector);
+        s_adapter.allocate(s_data, s_amount, bytes4(0), address(0));
+    }
+
+    function test_canAllocateToValidPoolOnly() external {
+        address owner = IOwnable(address(s_poolAddressesProviderRegistry)).owner();
+        address poolAddressesProvider = address(s_pool.ADDRESSES_PROVIDER());
+        vm.prank(owner);
+        s_poolAddressesProviderRegistry.unregisterAddressesProvider(poolAddressesProvider);
+
+        vm.prank(s_allocator);
+        vm.expectRevert(abi.encodeWithSelector(IAaveV3Adapter.AaveV3Adapter__InvalidPool.selector, address(s_pool)));
+        s_vault.allocate(address(s_adapter), s_data, s_amount);
+    }
+
+    function test_allocatingSucceeds() external {
+        vm.prank(s_allocator);
+        s_vault.allocate(address(s_adapter), s_data, s_amount);
+
+        IAToken aToken = IAToken(s_pool.getReserveData(address(s_asset)).aTokenAddress);
+        address pool = s_adapter.getPool(0);
+
+        assertEq(s_asset.balanceOf(address(s_adapter)), 0);
+        assertApproxEqAbs(aToken.balanceOf(address(s_adapter)), s_amount, s_usdcDelta);
+        assertEq(pool, address(s_pool));
+    }
+
+    function test_allocatingEntireVaultLiquiditySucceeds() external {
+        uint256 amount = s_asset.balanceOf(address(s_vault));
+
+        vm.prank(s_allocator);
+        s_vault.allocate(address(s_adapter), s_data, amount);
+
+        IAToken aToken = IAToken(s_pool.getReserveData(address(s_asset)).aTokenAddress);
+        address pool = s_adapter.getPool(0);
+
+        assertEq(s_asset.balanceOf(address(s_adapter)), 0);
+        assertApproxEqAbs(aToken.balanceOf(address(s_adapter)), amount, s_usdcDelta);
+        assertEq(pool, address(s_pool));
     }
 }
