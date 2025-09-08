@@ -82,8 +82,6 @@ contract AaveV3Adapter is AdapterBase, IAaveV3Adapter {
         IPool pool = IPool(poolAddr);
         IAToken aToken = IAToken(pool.getReserveData(address(i_asset)).aTokenAddress);
 
-        _requireValidPool(pool);
-
         if (_assets > 0) {
             pool.withdraw(address(i_asset), _assets, address(this));
         }
@@ -151,6 +149,19 @@ contract AaveV3Adapter is AdapterBase, IAaveV3Adapter {
         }
 
         return amountRealAssets;
+    }
+
+    /// @notice Gets the pool addresses provider registry address.
+    /// @return The pool addresses provider registry address.
+    function getPoolAddressesProviderRegistry() external view returns (address) {
+        return address(i_poolAddressesProviderRegstry);
+    }
+
+    /// @notice Gets the pool address at the given index in the active pools list.
+    /// @param _index The array index.
+    /// @return The pool address at the given index.
+    function getPool(uint256 _index) external view returns (address) {
+        return address(s_pools[_index]);
     }
 
     /// @notice Gets all the IDs associated with the given Aave v3 pool.
