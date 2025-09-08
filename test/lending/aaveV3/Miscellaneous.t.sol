@@ -3,10 +3,6 @@ pragma solidity ^0.8.20;
 
 import { IAToken } from "@src/adapters/lending/aaveV3/lib/interfaces/IAToken.sol";
 
-import { IAdapterBase } from "@src/adapterBase/interfaces/IAdapterBase.sol";
-import { IAaveV3Adapter } from "@src/adapters/lending/aaveV3/interfaces/IAaveV3Adapter.sol";
-import { IOwnable } from "@test/utils/interfaces/IOwnable.sol";
-
 import { AaveV3AdapterBaseTest } from "@test/lending/aaveV3/utils/AaveV3AdapterBaseTest.sol";
 
 contract AaveV3AdapterMiscellaneousTests is AaveV3AdapterBaseTest {
