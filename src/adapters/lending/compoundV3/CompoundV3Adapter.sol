@@ -59,10 +59,10 @@ contract CompoundV3Adapter is AdapterBase, ICompoundV3Adapter {
         return (getIds(cometAddr), int256(newAllocation) - int256(oldAllocation));
     }
 
-    /// @notice Withdraws assets from the given Aave v3 pool.
-    /// @param _data Abi encoded Aave v3 pool address.
+    /// @notice Withdraws assets from the given Compound v3 pool.
+    /// @param _data Abi encoded Compound v3 pool address.
     /// @param _assets The amount of assets to withdraw.
-    /// @return A list of IDs associated with the Aave v3 pool.
+    /// @return A list of IDs associated with the Compound v3 pool.
     /// @return The delta change in the amount of assets held by this adapter.
     function deallocate(
         bytes memory _data,
@@ -126,8 +126,8 @@ contract CompoundV3Adapter is AdapterBase, ICompoundV3Adapter {
         }
     }
 
-    /// @notice Gets the total amount of assets held by this adapter in Aave v3 pools.
-    /// @return Real assets held by this adapter in Aave v3 pools.
+    /// @notice Gets the total amount of assets held by this adapter in Compound v3 pools.
+    /// @return Real assets held by this adapter in Compound v3 pools.
     function realAssets() external view returns (uint256) {
         uint256 cometAddressesArrayLength = s_comets.length;
         uint256 amountRealAssets;
@@ -158,7 +158,7 @@ contract CompoundV3Adapter is AdapterBase, ICompoundV3Adapter {
         return address(s_comets[_index]);
     }
 
-    /// @notice Gets all the IDs associated with the given Aave v3 pool.
+    /// @notice Gets all the IDs associated with the given Compound v3 pool.
     /// @param _comet The Compound v3 comet address.
     /// @return A list of bytes32 IDs.
     function getIds(address _comet) public view returns (bytes32[] memory) {
