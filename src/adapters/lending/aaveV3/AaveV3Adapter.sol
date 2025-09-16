@@ -4,7 +4,6 @@ pragma solidity ^0.8.20;
 import { IAaveV3Adapter } from "@src/adapters/lending/aaveV3/interfaces/IAaveV3Adapter.sol";
 import { IAToken } from "@src/adapters/lending/aaveV3/lib/interfaces/IAToken.sol";
 import { IPool } from "@src/adapters/lending/aaveV3/lib/interfaces/IPool.sol";
-
 import { IPoolAddressesProviderRegistry } from
     "@src/adapters/lending/aaveV3/lib/interfaces/IPoolAddressesProviderRegistry.sol";
 
@@ -12,12 +11,12 @@ import { AdapterBase } from "@src/adapterBase/AdapterBase.sol";
 
 /// @title AaveV3Adapter.
 /// @author mgnfy-view.
-/// @notice Aave V3 adapter for Morpho vault v2. This adapter uses two functions `supply` and
+/// @notice Aave v3 adapter for Morpho vault v2. This adapter uses two functions `supply` and
 /// `withdraw` to allocate to and deallocate from Aave v3 pools respectively.
 contract AaveV3Adapter is AdapterBase, IAaveV3Adapter {
     /// @dev Registry for pool addresses providers.
     IPoolAddressesProviderRegistry internal immutable i_poolAddressesProviderRegstry;
-    /// @dev List of Aave V3 pools to supply tokens to.
+    /// @dev List of Aave v3 pools to supply tokens to.
     IPool[] internal s_pools;
 
     /// @dev Initializes the contract.
@@ -31,7 +30,7 @@ contract AaveV3Adapter is AdapterBase, IAaveV3Adapter {
     /// @param _data Abi encoded Aave v3 pool address.
     /// @param _assets The amount of assets to supply.
     /// @return A list of IDs associated with the Aave v3 pool.
-    /// @return The delta change in the amount of asstes held by this adapter.
+    /// @return The delta change in the amount of assets held by this adapter.
     function allocate(
         bytes memory _data,
         uint256 _assets,
@@ -50,23 +49,23 @@ contract AaveV3Adapter is AdapterBase, IAaveV3Adapter {
         _requireValidPool(pool);
 
         if (_assets > 0) {
-            i_asset.approve(address(pool), _assets);
+            i_asset.approve(poolAddr, _assets);
             pool.supply(address(i_asset), _assets, address(this), 0);
         }
 
-        uint256 oldAllocation = getAllocation(address(pool));
+        uint256 oldAllocation = getAllocation(poolAddr);
         uint256 newAllocation = aToken.balanceOf(address(this));
         _updatePoolsList(pool, oldAllocation, newAllocation);
 
         // forge-lint: disable-next-line(unsafe-typecast)
-        return (getIds(address(pool)), int256(newAllocation) - int256(oldAllocation));
+        return (getIds(poolAddr), int256(newAllocation) - int256(oldAllocation));
     }
 
     /// @notice Withdraws assets from the given Aave v3 pool.
     /// @param _data Abi encoded Aave v3 pool address.
     /// @param _assets The amount of assets to withdraw.
     /// @return A list of IDs associated with the Aave v3 pool.
-    /// @return The delta change in the amount of asstes held by this adapter.
+    /// @return The delta change in the amount of assets held by this adapter.
     function deallocate(
         bytes memory _data,
         uint256 _assets,
@@ -86,12 +85,12 @@ contract AaveV3Adapter is AdapterBase, IAaveV3Adapter {
             pool.withdraw(address(i_asset), _assets, address(this));
         }
 
-        uint256 oldAllocation = getAllocation(address(pool));
+        uint256 oldAllocation = getAllocation(poolAddr);
         uint256 newAllocation = aToken.balanceOf(address(this));
         _updatePoolsList(pool, oldAllocation, newAllocation);
 
         // forge-lint: disable-next-line(unsafe-typecast)
-        return (getIds(address(pool)), int256(newAllocation) - int256(oldAllocation));
+        return (getIds(poolAddr), int256(newAllocation) - int256(oldAllocation));
     }
 
     /// @dev Reverts if the given pool is not a valid Aave v3 pool. This is determined by checking if
@@ -155,6 +154,12 @@ contract AaveV3Adapter is AdapterBase, IAaveV3Adapter {
     /// @return The pool addresses provider registry address.
     function getPoolAddressesProviderRegistry() external view returns (address) {
         return address(i_poolAddressesProviderRegstry);
+    }
+
+    /// @notice Gets the number of Aave v3 pools this adapter has supplied tokens to.
+    /// @return The number of pools this adapter has supplied tokens to.
+    function getPoolsListLength() external view returns (uint256) {
+        return s_pools.length;
     }
 
     /// @notice Gets the pool address at the given index in the active pools list.

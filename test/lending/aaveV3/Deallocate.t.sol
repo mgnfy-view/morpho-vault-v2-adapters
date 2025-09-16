@@ -43,7 +43,6 @@ contract AaveV3AdapterDeallocateTests is AaveV3AdapterBaseTest {
         uint256 adapterATokenBalanceAfter = aToken.balanceOf(address(s_adapter));
         uint256 adapterAssetBalanceAfter = s_asset.balanceOf(address(s_adapter));
         uint256 vaultAssetBalanceAfter = s_asset.balanceOf(address(s_vault));
-
         assertEq(adapterAssetBalanceBefore - adapterAssetBalanceAfter, 0);
         assertApproxEqAbs(vaultAssetBalanceAfter - vaultAssetBalanceBefore, s_amount, s_usdcDelta);
         assertApproxEqAbs(adapterATokenBalanceBefore - adapterATokenBalanceAfter, s_amount, s_usdcDelta);
@@ -66,7 +65,6 @@ contract AaveV3AdapterDeallocateTests is AaveV3AdapterBaseTest {
         uint256 adapterATokenBalanceAfter = aToken.balanceOf(address(s_adapter));
         uint256 adapterAssetBalanceAfter = s_asset.balanceOf(address(s_adapter));
         uint256 vaultAssetBalanceAfter = s_asset.balanceOf(address(s_vault));
-
         assertEq(adapterAssetBalanceBefore - adapterAssetBalanceAfter, 0);
         assertApproxEqAbs(vaultAssetBalanceAfter - vaultAssetBalanceBefore, s_amount, s_usdcDelta);
         assertApproxEqAbs(adapterATokenBalanceBefore - adapterATokenBalanceAfter, s_amount, s_usdcDelta);
@@ -89,7 +87,6 @@ contract AaveV3AdapterDeallocateTests is AaveV3AdapterBaseTest {
         uint256 adapterATokenBalanceAfter = aToken.balanceOf(address(s_adapter));
         uint256 adapterAssetBalanceAfter = s_asset.balanceOf(address(s_adapter));
         uint256 vaultAssetBalanceAfter = s_asset.balanceOf(address(s_vault));
-
         assertEq(adapterAssetBalanceBefore - adapterAssetBalanceAfter, 0);
         assertApproxEqAbs(vaultAssetBalanceAfter - vaultAssetBalanceBefore, amount, s_usdcDelta);
         assertEq(adapterATokenBalanceBefore - adapterATokenBalanceAfter, amount);

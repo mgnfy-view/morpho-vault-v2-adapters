@@ -41,12 +41,12 @@ contract AaveV3AdapterMiscellaneousTests is AaveV3AdapterBaseTest {
         vm.prank(s_allocator);
         s_vault.allocate(address(s_adapter), s_data, s_amount);
 
+        assertEq(s_adapter.getPoolsListLength(), 1);
         assertEq(s_adapter.getPool(0), address(s_pool));
     }
 
     function test_checkIds() external view {
         bytes32[] memory ids = s_adapter.getIds(address(s_pool));
-
         assertEq(ids[0], s_adapter.getAdapterId());
         assertEq(ids[1], keccak256(abi.encode("this/pool", address(s_adapter), address(s_pool))));
     }

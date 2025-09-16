@@ -10,6 +10,7 @@ interface IAaveV3Adapter is IAdapterBase {
     error AaveV3Adapter__InvalidPool(address _pool);
 
     function getPoolAddressesProviderRegistry() external view returns (address);
+    function getPoolsListLength() external view returns (uint256);
     function getPool(uint256 _index) external view returns (address);
     function getIds(address _pool) external view returns (bytes32[] memory);
     function getAllocation(address _pool) external view returns (uint256);

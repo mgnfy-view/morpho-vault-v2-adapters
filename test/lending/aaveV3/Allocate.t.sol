@@ -45,9 +45,9 @@ contract AaveV3AdapterAllocateTests is AaveV3AdapterBaseTest {
 
         IAToken aToken = IAToken(s_pool.getReserveData(address(s_asset)).aTokenAddress);
         address pool = s_adapter.getPool(0);
-
         assertEq(s_asset.balanceOf(address(s_adapter)), 0);
         assertApproxEqAbs(aToken.balanceOf(address(s_adapter)), s_amount, s_usdcDelta);
+        assertEq(s_adapter.getPoolsListLength(), 1);
         assertEq(pool, address(s_pool));
     }
 
@@ -59,9 +59,9 @@ contract AaveV3AdapterAllocateTests is AaveV3AdapterBaseTest {
 
         IAToken aToken = IAToken(s_pool.getReserveData(address(s_asset)).aTokenAddress);
         address pool = s_adapter.getPool(0);
-
         assertEq(s_asset.balanceOf(address(s_adapter)), 0);
         assertApproxEqAbs(aToken.balanceOf(address(s_adapter)), amount, s_usdcDelta);
+        assertEq(s_adapter.getPoolsListLength(), 1);
         assertEq(pool, address(s_pool));
     }
 }
