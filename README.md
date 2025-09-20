@@ -13,14 +13,14 @@
     <img src="assets/icon.svg" alt="Logo" width="80" height="80">
   </a> -->
 
-  <h3 align="center">Project Name</h3>
+  <h3 align="center">Morpho Vault v2 Adapters</h3>
 
   <p align="center">
-    Description
+    Morpho vault v2 adapters for popular DeFi protocols 
     <br />
-    <a href="https://github.com/mgnfy-view/foundry-starter-template-v2/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
+    <a href="https://github.com/mgnfy-view/morpho-vault-v2-adapters/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
     ·
-    <a href="https://github.com/mgnfy-view/foundry-starter-template-v2/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
+    <a href="https://github.com/mgnfy-view/morpho-vault-v2-adapters/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
   </p>
 </div>
 
@@ -52,7 +52,12 @@
 
 ## About The Project
 
-Project description goes here.
+This repository houses adapters for Morpho Vault v2, that enable Morpho vaults to interact with various DeFi protocols. Morpho Vault v2 introduces a powerful new architecture centered around adapters that allow vaults to connect to any protocol, moving from being tightly coupled to Morpho Market v1 to a universal system that can integrate with diverse yield sources.
+
+Useful links:
+
+- [Docs](https://docs.morpho.org/learn/concepts/vault-v2/)
+- [Vault v2 Github](https://github.com/morpho-org/vault-v2)
 
 ### Built With
 
@@ -66,27 +71,27 @@ Project description goes here.
 
 ### Prerequisites
 
--
+Make sure you have git, rust, and foundry installed and configured on your system.
 
 ### Installation
 
 Clone the repo,
 
 ```shell
-git clone https://github.com/mgnfy-view/foundry-starter-template-v2.git
+git clone https://github.com/mgnfy-view/morpho-vault-v2-adapters.git
 ```
 
 cd into the repo, install the necessary dependencies, and build the project,
 
 ```shell
-cd foundry-starter-template-v2
+cd morpho-vault-v2-adapters
 make
 ```
 
-Run tests by executing
+Run tests by executing,
 
 ```shell
-forge test
+make ftest
 ```
 
 That's it, you are good to go now!
@@ -99,7 +104,7 @@ That's it, you are good to go now!
 -   [ ] Testing
 -   [ ] Documentation
 
-See the [open issues](https://github.com/mgnfy-view/foundry-starter-template-v2/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/mgnfy-view/morpho-vault-v2-adapters/issues) for a full list of proposed features (and known issues).
 
 <!-- CONTRIBUTING -->
 
@@ -134,13 +139,13 @@ Here's a gateway to all my socials, don't forget to hit me up!
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
 [contributors-shield]: https://img.shields.io/github/contributors/mgnfy-view/foundry-starter-template-v2.svg?style=for-the-badge
-[contributors-url]: https://github.com/mgnfy-view/foundry-starter-template-v2/graphs/contributors
+[contributors-url]: https://github.com/mgnfy-view/morpho-vault-v2-adapters/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/mgnfy-view/foundry-starter-template-v2.svg?style=for-the-badge
-[forks-url]: https://github.com/mgnfy-view/foundry-starter-template-v2/network/members
+[forks-url]: https://github.com/mgnfy-view/morpho-vault-v2-adapters/network/members
 [stars-shield]: https://img.shields.io/github/stars/mgnfy-view/foundry-starter-template-v2.svg?style=for-the-badge
-[stars-url]: https://github.com/mgnfy-view/foundry-starter-template-v2/stargazers
+[stars-url]: https://github.com/mgnfy-view/morpho-vault-v2-adapters/stargazers
 [issues-shield]: https://img.shields.io/github/issues/mgnfy-view/foundry-starter-template-v2.svg?style=for-the-badge
-[issues-url]: https://github.com/mgnfy-view/foundry-starter-template-v2/issues
+[issues-url]: https://github.com/mgnfy-view/morpho-vault-v2-adapters/issues
 [license-shield]: https://img.shields.io/github/license/mgnfy-view/foundry-starter-template-v2.svg?style=for-the-badge
-[license-url]: https://github.com/mgnfy-view/foundry-starter-template-v2/blob/master/LICENSE.txt
+[license-url]: https://github.com/mgnfy-view/morpho-vault-v2-adapters/blob/master/LICENSE.txt
 [linktree-url]: https://linktr.ee/mgnfy.view
