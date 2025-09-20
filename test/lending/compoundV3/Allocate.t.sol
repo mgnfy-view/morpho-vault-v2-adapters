@@ -15,7 +15,7 @@ contract CompoundV3AdapterAllocateTests is CompoundV3AdapterBaseTest {
         super.setUp();
 
         s_data = abi.encode(address(s_comet));
-        s_amount = 10_000 * s_assetDecimalsScalingFactor;
+        s_amount = 100 * s_assetDecimalsScalingFactor;
         s_usdcDelta = (1 * s_assetDecimalsScalingFactor) / 100;
     }
 

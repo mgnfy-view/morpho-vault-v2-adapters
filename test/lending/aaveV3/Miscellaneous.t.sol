@@ -14,7 +14,7 @@ contract AaveV3AdapterMiscellaneousTests is AaveV3AdapterBaseTest {
         super.setUp();
 
         s_data = abi.encode(address(s_pool));
-        s_amount = 10_000 * s_assetDecimalsScalingFactor;
+        s_amount = 100 * s_assetDecimalsScalingFactor;
         s_usdcDelta = (1 * s_assetDecimalsScalingFactor) / 100;
     }
 

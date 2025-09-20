@@ -33,7 +33,7 @@ contract CompoundV3AdapterBaseTest is BaseTest {
         s_adapter = new CompoundV3Adapter(address(s_vault), s_configurator);
         _setAdapter(address(s_adapter));
 
-        uint256 maxDepositedAssets = 1_000_000 * s_assetDecimalsScalingFactor;
+        uint256 maxDepositedAssets = 1_000 * s_assetDecimalsScalingFactor;
         bytes[] memory ids = new bytes[](2);
         ids[0] = abi.encode("this", address(s_adapter));
         ids[1] = abi.encode("this/pool", address(s_adapter), address(s_comet));
