@@ -143,7 +143,7 @@ contract EulerV2Adapter is AdapterBase, IEulerV2Adapter {
     /// @notice Gets the EVault factory address.
     /// @return The EVault factory address.
     function getEVaultFactory() external view returns (address) {
-        return address(i_factory);
+        return address(i_evaultFactory);
     }
 
     /// @notice Gets the number of vaults this adapter has supplied tokens to.

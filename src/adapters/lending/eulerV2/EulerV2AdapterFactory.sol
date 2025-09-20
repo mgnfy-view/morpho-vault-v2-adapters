@@ -27,7 +27,7 @@ contract EulerV2AdapterFactory is IEulerV2AdapterFactory {
     /// the adapter address.
     /// @param _parentVault The Morpho vault v2 instance.
     /// @return The deployed adapter address.
-    function createCompoundV3Adapter(address _parentVault) external returns (address) {
+    function createEulerV2Adapter(address _parentVault) external returns (address) {
         address eulerV2Adapter = address(new EulerV2Adapter(_parentVault, address(i_factory)));
         s_eulerV2Adapters[_parentVault] = eulerV2Adapter;
         s_isEulerV2Adapter[eulerV2Adapter] = true;
