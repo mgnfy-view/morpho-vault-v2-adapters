@@ -133,7 +133,8 @@ contract EulerV2Adapter is AdapterBase, IEulerV2Adapter {
         uint256 amountRealAssets;
 
         for (uint256 i = 0; i < vaultAddressesArrayLength; ++i) {
-            amountRealAssets += s_vaults[i].balanceOf(address(this));
+            uint256 shares = s_vaults[i].balanceOf(address(this));
+            amountRealAssets += s_vaults[i].convertToAssets(shares);
         }
 
         return amountRealAssets;
