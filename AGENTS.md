@@ -23,7 +23,11 @@
 - Solidity formatting is managed by `forge fmt` with 4-space indentation and 120-char lines (see `foundry.toml`).
 - Imports are sorted and use double quotes; avoid manual formatting drift.
 - Interfaces use the `I` prefix (e.g., `IAdapterBase`); contracts use PascalCase.
+- Use `src/adapters/lending/<protocol>/` only for lending adapters. For other protocol types, use `src/adapters/<category>/<protocol>/`.
 - New adapters should follow existing folder naming, e.g., `src/adapters/lending/<protocol>/`.
+## Natspec Conventions
+
+- Always use `///`-style Natspec comments on contracts, functions, and public state.
 
 ## Testing Guidelines
 
