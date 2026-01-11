@@ -15,3 +15,6 @@ docs/
 
 # Installed dependencies
 dependencies/*
+
+# Codex config
+.codex
