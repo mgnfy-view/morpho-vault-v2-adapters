@@ -16,7 +16,6 @@ import {
 contract SiloV2IsolatedMarketAdapter is AdapterBase, ISiloV2IsolatedMarketAdapter {
     /// @notice The Silo factory used to validate Silo v2 deployments.
     ISiloFactory internal immutable i_siloFactory;
-
     /// @notice List of Silo markets this adapter currently has a non-zero allocation in.
     ISilo[] internal s_silos;
 
