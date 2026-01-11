@@ -4,8 +4,9 @@ pragma solidity ^0.8.20;
 import { IAaveV3Adapter } from "@src/adapters/lending/aaveV3/interfaces/IAaveV3Adapter.sol";
 import { IAToken } from "@src/adapters/lending/aaveV3/lib/interfaces/IAToken.sol";
 import { IPool } from "@src/adapters/lending/aaveV3/lib/interfaces/IPool.sol";
-import { IPoolAddressesProviderRegistry } from
-    "@src/adapters/lending/aaveV3/lib/interfaces/IPoolAddressesProviderRegistry.sol";
+import {
+    IPoolAddressesProviderRegistry
+} from "@src/adapters/lending/aaveV3/lib/interfaces/IPoolAddressesProviderRegistry.sol";
 
 import { AdapterBase } from "@src/adapterBase/AdapterBase.sol";
 
@@ -31,12 +32,7 @@ contract AaveV3Adapter is AdapterBase, IAaveV3Adapter {
     /// @param _assets The amount of assets to supply.
     /// @return A list of IDs associated with the Aave v3 pool.
     /// @return The delta change in the amount of assets held by this adapter.
-    function allocate(
-        bytes memory _data,
-        uint256 _assets,
-        bytes4,
-        address
-    )
+    function allocate(bytes memory _data, uint256 _assets, bytes4, address)
         external
         returns (bytes32[] memory, int256)
     {
@@ -125,7 +121,7 @@ contract AaveV3Adapter is AdapterBase, IAaveV3Adapter {
 
         if (_oldAllocation > 0 && _newAllocation == 0) {
             for (uint256 i = 0; i < poolAddressesArrayLength; i++) {
-                if (s_pools[i] == _pool) {
+                if (address(s_pools[i]) == address(_pool)) {
                     s_pools[i] = s_pools[poolAddressesArrayLength - 1];
                     s_pools.pop();
                     break;
