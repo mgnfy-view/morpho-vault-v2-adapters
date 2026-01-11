@@ -25,6 +25,7 @@
 - Interfaces use the `I` prefix (e.g., `IAdapterBase`); contracts use PascalCase.
 - Use `src/adapters/lending/<protocol>/` only for lending adapters. For other protocol types, use `src/adapters/<category>/<protocol>/`.
 - New adapters should follow existing folder naming, e.g., `src/adapters/lending/<protocol>/`.
+
 ## Natspec Conventions
 
 - Always use `///`-style Natspec comments on contracts, functions, and public state.
