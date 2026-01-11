@@ -10,8 +10,8 @@ import { CometConfiguration } from "@src/adapters/lending/compoundV3/lib/librari
 
 /// @title CompoundV3Adapter.
 /// @author mgnfy-view.
-/// @notice Compound v3 adapter for Morpho vault v2. This adapter uses two functions `supply` and
-/// `withdraw` to allocate to and deallocate from Compound v3 comet instances respectively.
+/// @notice Morpho Vault v2 adapter that allocates assets to Compound v3 comet instances using supply/withdraw.
+/// @dev Positions are tracked via comet share balances, and comets are validated via the configurator.
 contract CompoundV3Adapter is AdapterBase, ICompoundV3Adapter {
     /// @dev The Compound v3 configurator that can deploy and configure comet instances.
     IConfigurator internal immutable i_configurator;
@@ -19,17 +19,18 @@ contract CompoundV3Adapter is AdapterBase, ICompoundV3Adapter {
     IComet[] internal s_comets;
 
     /// @dev Initializes the contract.
-    /// @param _morphoVaultV2 The Morpho vault v2 contract.
+    /// @param _morphoVaultV2 The Morpho Vault v2 contract.
     /// @param _configurator The Compound v3 configurator that can deploy and configure comet instances.
     constructor(address _morphoVaultV2, address _configurator) AdapterBase(_morphoVaultV2) {
         i_configurator = IConfigurator(_configurator);
     }
 
     /// @notice Supplies assets to the given Compound v3 comet instance.
+    /// @dev `_data` must be `abi.encode(address cometAddr)`.
     /// @param _data Abi encoded Compound v3 comet address.
     /// @param _assets The amount of assets to supply.
     /// @return A list of IDs associated with the Compound v3 comet instance.
-    /// @return The delta change in the amount of assets held by this adapter.
+    /// @return The delta change in the amount of assets held by this adapter for the comet.
     function allocate(bytes memory _data, uint256 _assets, bytes4, address)
         external
         returns (bytes32[] memory, int256)
@@ -54,11 +55,12 @@ contract CompoundV3Adapter is AdapterBase, ICompoundV3Adapter {
         return (getIds(cometAddr), int256(newAllocation) - int256(oldAllocation));
     }
 
-    /// @notice Withdraws assets from the given Compound v3 pool.
-    /// @param _data Abi encoded Compound v3 pool address.
+    /// @notice Withdraws assets from the given Compound v3 comet instance.
+    /// @dev `_data` must be `abi.encode(address cometAddr)`.
+    /// @param _data Abi encoded Compound v3 comet address.
     /// @param _assets The amount of assets to withdraw.
-    /// @return A list of IDs associated with the Compound v3 pool.
-    /// @return The delta change in the amount of assets held by this adapter.
+    /// @return A list of IDs associated with the Compound v3 comet instance.
+    /// @return The delta change in the amount of assets held by this adapter for the comet.
     function deallocate(
         bytes memory _data,
         uint256 _assets,
@@ -87,8 +89,8 @@ contract CompoundV3Adapter is AdapterBase, ICompoundV3Adapter {
         return (getIds(cometAddr), int256(newAllocation) - int256(oldAllocation));
     }
 
-    /// @dev Reverts if the given comet instance is not a valid one. A comet instance is not valid if its
-    /// base token is not the same as the Morpho vault's accepted asset.
+    /// @dev Reverts if the given comet instance is not a valid one. A comet instance is valid when it
+    /// is configured and its base token matches the Morpho vault's accepted asset.
     /// @param _comet The Compound v3 comet instance.
     function _requireValidCometInstance(IComet _comet) internal view {
         CometConfiguration.Configuration memory config = i_configurator.getConfiguration(address(_comet));
@@ -97,8 +99,7 @@ contract CompoundV3Adapter is AdapterBase, ICompoundV3Adapter {
         }
     }
 
-    /// @dev Updates the list of Compound v3 comet instances the adapter has supplied to. If the allocation to a
-    /// pool becomes 0, the pool is popped from the list.
+    /// @dev Updates the list of Compound v3 comet instances with a non-zero allocation.
     /// @param _comet The comet instance to add/pop. Or no-op if allocation is greater than 0 and the comet address
     /// is already in the list.
     /// @param _oldAllocation The amount of assets held by the adapter in the given pool before the
@@ -121,8 +122,8 @@ contract CompoundV3Adapter is AdapterBase, ICompoundV3Adapter {
         }
     }
 
-    /// @notice Gets the total amount of assets held by this adapter in Compound v3 pools.
-    /// @return Real assets held by this adapter in Compound v3 pools.
+    /// @notice Gets the total amount of assets held by this adapter across tracked comets.
+    /// @return Real assets held by this adapter in Compound v3 comets.
     function realAssets() external view returns (uint256) {
         uint256 cometAddressesArrayLength = s_comets.length;
         uint256 amountRealAssets;
@@ -134,26 +135,26 @@ contract CompoundV3Adapter is AdapterBase, ICompoundV3Adapter {
         return amountRealAssets;
     }
 
-    /// @notice Gets the comet configurator address.
+    /// @notice Gets the comet configurator address used for validation.
     /// @return The comet configurator address.
     function getConfigurator() external view returns (address) {
         return address(i_configurator);
     }
 
-    /// @notice Gets the number of comet instances this adapter has supplied tokens to.
-    /// @return The number of comet instances this adapter has supplied tokens to.
+    /// @notice Gets the number of tracked comets with non-zero allocation.
+    /// @return The number of tracked comets.
     function getCometsListLength() external view returns (uint256) {
         return s_comets.length;
     }
 
-    /// @notice Gets the comet address at the given index in the active comets list.
+    /// @notice Gets the comet address at the given index in the tracked comets list.
     /// @param _index The array index.
     /// @return The comet address at the given index.
     function getComet(uint256 _index) external view returns (address) {
         return address(s_comets[_index]);
     }
 
-    /// @notice Gets all the IDs associated with the given Compound v3 pool.
+    /// @notice Gets all the IDs associated with the given Compound v3 comet.
     /// @param _comet The Compound v3 comet address.
     /// @return A list of bytes32 IDs.
     function getIds(address _comet) public view returns (bytes32[] memory) {
@@ -164,7 +165,8 @@ contract CompoundV3Adapter is AdapterBase, ICompoundV3Adapter {
         return ids;
     }
 
-    /// @notice Gets the assets allocated to the given Compound v3 comet.
+    /// @notice Gets the assets allocated to the given Compound v3 comet according to the parent vault.
+    /// @dev This value is updated by the parent vault at the end of allocate/deallocate calls.
     /// @param _comet The Compound v3 comet address.
     /// @return The amount allocated to the comet instance.
     function getAllocation(address _comet) public view returns (uint256) {

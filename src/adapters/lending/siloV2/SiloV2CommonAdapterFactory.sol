@@ -16,9 +16,9 @@ contract SiloV2CommonAdapterFactory is ISiloV2CommonAdapterFactory {
     address internal immutable i_siloFactory;
     /// @dev The SiloVaultsFactory used to validate Silo v2 managed vaults.
     address internal immutable i_siloVaultsFactory;
-    /// @dev Maps a parent Morpho vault to it's corresponding Silo v2 isolated market adapter.
+    /// @dev Maps a parent Morpho vault to its corresponding Silo v2 isolated market adapter.
     mapping(address parentVault => address siloV2IsolatedMarketAdapter) internal s_siloV2IsolatedMarketAdapters;
-    /// @dev Maps a parent Morpho vault to it's corresponding Silo v2 managed vault adapter.
+    /// @dev Maps a parent Morpho vault to its corresponding Silo v2 managed vault adapter.
     mapping(address parentVault => address siloV2ManagedVaultAdapter) internal s_siloV2ManagedVaultAdapters;
     /// @dev Checks if the given address is a Silo v2 isolated market adapter deployed by this factory or not.
     mapping(address account => bool isSiloV2IsolatedMarketAdapter) internal s_isSiloV2IsolatedMarketAdapter;
@@ -33,9 +33,9 @@ contract SiloV2CommonAdapterFactory is ISiloV2CommonAdapterFactory {
         i_siloVaultsFactory = _siloVaultsFactory;
     }
 
-    /// @notice Deploys the Silo v2 isolated market adapter for the given parent vault. New deployments can overwrite
-    /// the adapter address.
-    /// @param _parentVault The Morpho vault v2 instance.
+    /// @notice Deploys the Silo v2 isolated market adapter for the given parent vault.
+    /// @dev New deployments can overwrite the adapter address.
+    /// @param _parentVault The Morpho Vault v2 instance.
     /// @return The deployed adapter address.
     function createSiloV2IsolatedMarketAdapter(address _parentVault) external returns (address) {
         address siloV2IsolatedMarketAdapter = address(new SiloV2IsolatedMarketAdapter(_parentVault, i_siloFactory));
@@ -47,9 +47,9 @@ contract SiloV2CommonAdapterFactory is ISiloV2CommonAdapterFactory {
         return siloV2IsolatedMarketAdapter;
     }
 
-    /// @notice Deploys the Silo v2 managed vault adapter for the given parent vault. New deployments can overwrite
-    /// the adapter address.
-    /// @param _parentVault The Morpho vault v2 instance.
+    /// @notice Deploys the Silo v2 managed vault adapter for the given parent vault.
+    /// @dev New deployments can overwrite the adapter address.
+    /// @param _parentVault The Morpho Vault v2 instance.
     /// @return The deployed adapter address.
     function createSiloV2ManagedVaultAdapter(address _parentVault) external returns (address) {
         address siloV2ManagedVaultAdapter = address(new SiloV2ManagedVaultAdapter(_parentVault, i_siloVaultsFactory));

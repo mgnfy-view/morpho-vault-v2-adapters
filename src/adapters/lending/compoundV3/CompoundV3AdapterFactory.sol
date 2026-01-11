@@ -8,11 +8,11 @@ import { CompoundV3Adapter } from "@src/adapters/lending/compoundV3/CompoundV3Ad
 
 /// @title CompoundV3AdapterFactory.
 /// @author mgnfy-view.
-/// @notice Factory contract to deploy Compound v3 adapters.
+/// @notice Factory contract to deploy Compound v3 adapters for Morpho Vault v2.
 contract CompoundV3AdapterFactory is ICompoundV3AdapterFactory {
     /// @dev The Compound v3 configurator that can deploy and configure comet instances.
     IConfigurator internal immutable i_configurator;
-    /// @dev Maps a parent Morpho vault to it's corresponding Compound v3 adapter.
+    /// @dev Maps a parent Morpho vault to its corresponding Compound v3 adapter.
     mapping(address parentVault => address compoundV3Adapter) internal s_compoundV3Adapters;
     /// @dev Checks if the given address is a Compound v3 adapter deployed by this factory or not.
     mapping(address account => bool isCompoundV3Adapter) internal s_isCompoundV3Adapter;
@@ -23,9 +23,9 @@ contract CompoundV3AdapterFactory is ICompoundV3AdapterFactory {
         i_configurator = IConfigurator(_configurator);
     }
 
-    /// @notice Deploys the Compound v3 adapter for the given parent vault. New deployments can overwrite
-    /// the adapter address.
-    /// @param _parentVault The Morpho vault v2 instance.
+    /// @notice Deploys the Compound v3 adapter for the given parent vault.
+    /// @dev New deployments can overwrite the adapter address.
+    /// @param _parentVault The Morpho Vault v2 instance.
     /// @return The deployed adapter address.
     function createCompoundV3Adapter(address _parentVault) external returns (address) {
         address compoundV3Adapter = address(new CompoundV3Adapter(_parentVault, address(i_configurator)));

@@ -17,7 +17,7 @@ import {
 contract SiloV2ManagedVaultAdapter is AdapterBase, ISiloV2ManagedVaultAdapter {
     /// @notice The SiloVaultsFactory used to validate Silo managed vault deployments.
     ISiloVaultsFactory internal immutable i_siloVaultsFactory;
-    /// @notice List of Silo managed vaults this adapter currently has a non-zero allocation in.
+    /// @notice List of Silo managed vaults with a non-zero allocation.
     ISiloVault[] internal s_siloVaults;
 
     /// @notice Initializes the adapter with the parent Morpho Vault v2 and SiloVaultsFactory.
@@ -103,7 +103,7 @@ contract SiloV2ManagedVaultAdapter is AdapterBase, ISiloV2ManagedVaultAdapter {
         }
     }
 
-    /// @dev Updates the list of tracked Silo managed vaults this adapter has a non-zero position in.
+    /// @dev Updates the list of tracked Silo managed vaults with non-zero allocations.
     /// @dev If `_newAllocation` becomes 0, the managed vault is removed from the list.
     /// @param _siloVault The managed vault to add/remove, or no-op if already present and allocation remains non-zero.
     /// @param _oldAllocation The amount of assets held by the adapter for the managed vault before the call.
@@ -144,7 +144,7 @@ contract SiloV2ManagedVaultAdapter is AdapterBase, ISiloV2ManagedVaultAdapter {
         return address(i_siloVaultsFactory);
     }
 
-    /// @notice Gets the number of tracked Silo managed vaults this adapter has a non-zero position in.
+    /// @notice Gets the number of tracked Silo managed vaults with a non-zero position.
     /// @return The number of tracked managed vaults.
     function getSiloVaultsListLength() external view returns (uint256) {
         return s_siloVaults.length;

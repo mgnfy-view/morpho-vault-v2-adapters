@@ -7,11 +7,11 @@ import { AaveV3Adapter } from "@src/adapters/lending/aaveV3/AaveV3Adapter.sol";
 
 /// @title AaveV3AdapterFactory.
 /// @author mgnfy-view.
-/// @notice Factory contract to deploy Aave v3 adapters.
+/// @notice Factory contract to deploy Aave v3 adapters for Morpho Vault v2.
 contract AaveV3AdapterFactory is IAaveV3AdapterFactory {
     /// @dev The pool addresses provider registry for Aave V3.
     address internal immutable i_poolAddressesProviderRegistry;
-    /// @dev Maps a parent Morpho vault to it's corresponding Aave v3 adapter.
+    /// @dev Maps a parent Morpho vault to its corresponding Aave v3 adapter.
     mapping(address parentVault => address aaveV3Adapter) internal s_aaveV3Adapters;
     /// @dev Checks if the given address is an Aave v3 adapter deployed by this factory or not.
     mapping(address account => bool isAaveV3Adapter) internal s_isAaveV3Adapter;
@@ -23,9 +23,9 @@ contract AaveV3AdapterFactory is IAaveV3AdapterFactory {
         i_poolAddressesProviderRegistry = _poolAddressesProviderRegistry;
     }
 
-    /// @notice Deploys the Aave v3 adapter for the given parent vault. New deployments can overwrite
-    /// the adapter address.
-    /// @param _parentVault The Morpho vault v2 instance.
+    /// @notice Deploys the Aave v3 adapter for the given parent vault.
+    /// @dev New deployments can overwrite the adapter address.
+    /// @param _parentVault The Morpho Vault v2 instance.
     /// @return The deployed adapter address.
     function createAaveV3Adapter(address _parentVault) external returns (address) {
         address aaveV3Adapter = address(new AaveV3Adapter(_parentVault, i_poolAddressesProviderRegistry));

@@ -8,11 +8,11 @@ import { EulerV2Adapter } from "@src/adapters/lending/eulerV2/EulerV2Adapter.sol
 
 /// @title EulerV2AdapterFactory.
 /// @author mgnfy-view.
-/// @notice Factory contract to deploy Euler v2 adapters.
+/// @notice Factory contract to deploy Euler v2 adapters for Morpho Vault v2.
 contract EulerV2AdapterFactory is IEulerV2AdapterFactory {
     /// @dev The Euler v2 vault factory that deploys Euler vault proxies.
     IEVaultFactory internal immutable i_factory;
-    /// @dev Maps a parent Morpho vault to it's corresponding Euler v2 adapter.
+    /// @dev Maps a parent Morpho vault to its corresponding Euler v2 adapter.
     mapping(address parentVault => address eulerV2Adapter) internal s_eulerV2Adapters;
     /// @dev Checks if the given address is a Euler v2 adapter deployed by this factory or not.
     mapping(address account => bool isEulerV2Adapter) internal s_isEulerV2Adapter;
@@ -23,9 +23,9 @@ contract EulerV2AdapterFactory is IEulerV2AdapterFactory {
         i_factory = IEVaultFactory(_factory);
     }
 
-    /// @notice Deploys the Euler v2 adapter for the given parent vault. New deployments can overwrite
-    /// the adapter address.
-    /// @param _parentVault The Morpho vault v2 instance.
+    /// @notice Deploys the Euler v2 adapter for the given parent vault.
+    /// @dev New deployments can overwrite the adapter address.
+    /// @param _parentVault The Morpho Vault v2 instance.
     /// @return The deployed adapter address.
     function createEulerV2Adapter(address _parentVault) external returns (address) {
         address eulerV2Adapter = address(new EulerV2Adapter(_parentVault, address(i_factory)));
@@ -44,7 +44,7 @@ contract EulerV2AdapterFactory is IEulerV2AdapterFactory {
         return s_eulerV2Adapters[_parentVault];
     }
 
-    /// @notice Checks if the given adapter address is a Euler v2 adapter deployed by this
+    /// @notice Checks if the given adapter address is an Euler v2 adapter deployed by this
     /// factory or not.
     /// @param _adapter The adapter address.
     /// @return A boolean indicating whether the given adapter address is a Euler v2 adapter deployed by this

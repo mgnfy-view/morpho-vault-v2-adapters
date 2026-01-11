@@ -12,26 +12,27 @@ import { AdapterBase } from "@src/adapterBase/AdapterBase.sol";
 
 /// @title AaveV3Adapter.
 /// @author mgnfy-view.
-/// @notice Aave v3 adapter for Morpho vault v2. This adapter uses two functions `supply` and
-/// `withdraw` to allocate to and deallocate from Aave v3 pools respectively.
+/// @notice Morpho Vault v2 adapter that allocates assets to Aave v3 pools using supply/withdraw.
+/// @dev Positions are tracked via aToken balances, and pools are validated against the registry.
 contract AaveV3Adapter is AdapterBase, IAaveV3Adapter {
-    /// @dev Registry for pool addresses providers.
+    /// @dev Registry of Aave v3 pool addresses providers used for pool validation.
     IPoolAddressesProviderRegistry internal immutable i_poolAddressesProviderRegstry;
-    /// @dev List of Aave v3 pools to supply tokens to.
+    /// @dev List of Aave v3 pools with a non-zero allocation.
     IPool[] internal s_pools;
 
     /// @dev Initializes the contract.
-    /// @param _morphoVaultV2 The Morpho vault v2 contract.
+    /// @param _morphoVaultV2 The Morpho Vault v2 contract.
     /// @param _poolAddressesProviderRegstry Registry for pool addresses providers.
     constructor(address _morphoVaultV2, address _poolAddressesProviderRegstry) AdapterBase(_morphoVaultV2) {
         i_poolAddressesProviderRegstry = IPoolAddressesProviderRegistry(_poolAddressesProviderRegstry);
     }
 
     /// @notice Supplies assets to the given Aave v3 pool.
+    /// @dev `_data` must be `abi.encode(address poolAddr)`.
     /// @param _data Abi encoded Aave v3 pool address.
     /// @param _assets The amount of assets to supply.
     /// @return A list of IDs associated with the Aave v3 pool.
-    /// @return The delta change in the amount of assets held by this adapter.
+    /// @return The delta change in the amount of assets held by this adapter for the vault.
     function allocate(bytes memory _data, uint256 _assets, bytes4, address)
         external
         returns (bytes32[] memory, int256)
@@ -58,10 +59,11 @@ contract AaveV3Adapter is AdapterBase, IAaveV3Adapter {
     }
 
     /// @notice Withdraws assets from the given Aave v3 pool.
+    /// @dev `_data` must be `abi.encode(address poolAddr)`.
     /// @param _data Abi encoded Aave v3 pool address.
     /// @param _assets The amount of assets to withdraw.
     /// @return A list of IDs associated with the Aave v3 pool.
-    /// @return The delta change in the amount of assets held by this adapter.
+    /// @return The delta change in the amount of assets held by this adapter for the vault.
     function deallocate(
         bytes memory _data,
         uint256 _assets,
@@ -89,8 +91,8 @@ contract AaveV3Adapter is AdapterBase, IAaveV3Adapter {
         return (getIds(poolAddr), int256(newAllocation) - int256(oldAllocation));
     }
 
-    /// @dev Reverts if the given pool is not a valid Aave v3 pool. This is determined by checking if
-    /// the addresses provider of the given pool exists in the pool addresses providers registry.
+    /// @dev Reverts if the given pool is not a valid Aave v3 pool. A pool is valid when its
+    /// addresses provider is registered in the pool addresses providers registry.
     /// @param _pool The pool to check.
     function _requireValidPool(IPool _pool) internal view {
         address[] memory poolAddressesProviders = i_poolAddressesProviderRegstry.getAddressesProvidersList();
@@ -108,8 +110,7 @@ contract AaveV3Adapter is AdapterBase, IAaveV3Adapter {
         if (!isValid) revert AaveV3Adapter__InvalidPool(address(_pool));
     }
 
-    /// @dev Updates the list of Aave v3 pools the adapter has supplied to. If the allocation to a
-    /// pool becomes 0, the pool is popped from the list.
+    /// @dev Updates the list of Aave v3 pools with a non-zero allocation.
     /// @param _pool The pool to add/pop. Or no-op if allocation is greater than 0 and the pool address
     /// is already in the list.
     /// @param _oldAllocation The amount of assets held by the adapter in the given pool before the
@@ -132,7 +133,8 @@ contract AaveV3Adapter is AdapterBase, IAaveV3Adapter {
         }
     }
 
-    /// @notice Gets the total amount of assets held by this adapter in Aave v3 pools.
+    /// @notice Gets the total amount of assets held by this adapter across tracked Aave v3 pools.
+    /// @dev Returns the sum of aToken balances across tracked pools.
     /// @return Real assets held by this adapter in Aave v3 pools.
     function realAssets() external view returns (uint256) {
         uint256 poolAddressesArrayLength = s_pools.length;
@@ -146,19 +148,19 @@ contract AaveV3Adapter is AdapterBase, IAaveV3Adapter {
         return amountRealAssets;
     }
 
-    /// @notice Gets the pool addresses provider registry address.
+    /// @notice Gets the pool addresses provider registry address used for validation.
     /// @return The pool addresses provider registry address.
     function getPoolAddressesProviderRegistry() external view returns (address) {
         return address(i_poolAddressesProviderRegstry);
     }
 
-    /// @notice Gets the number of Aave v3 pools this adapter has supplied tokens to.
-    /// @return The number of pools this adapter has supplied tokens to.
+    /// @notice Gets the number of Aave v3 pools with non-zero allocation.
+    /// @return The number of tracked pools.
     function getPoolsListLength() external view returns (uint256) {
         return s_pools.length;
     }
 
-    /// @notice Gets the pool address at the given index in the active pools list.
+    /// @notice Gets the pool address at the given index in the tracked pools list.
     /// @param _index The array index.
     /// @return The pool address at the given index.
     function getPool(uint256 _index) external view returns (address) {
@@ -176,7 +178,8 @@ contract AaveV3Adapter is AdapterBase, IAaveV3Adapter {
         return ids;
     }
 
-    /// @notice Gets the assets allocated to the given Aave v3 pool.
+    /// @notice Gets the assets allocated to the given Aave v3 pool according to the parent vault.
+    /// @dev This value is updated by the parent vault at the end of allocate/deallocate calls.
     /// @param _pool The Aave v3 pool address.
     /// @return The amount allocated to the pool.
     function getAllocation(address _pool) public view returns (uint256) {

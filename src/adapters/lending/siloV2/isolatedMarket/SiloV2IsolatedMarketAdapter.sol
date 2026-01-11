@@ -12,11 +12,12 @@ import {
 /// @title SiloV2IsolatedMarketAdapter.
 /// @author mgnfy-view.
 /// @notice Morpho Vault v2 adapter that allocates assets into Silo v2 isolated lending markets.
-/// @dev This adapter always supplies borrowable liquidity and tracks positions via ERC4626 share accounting.
+/// @dev This adapter always supplies borrowable liquidity, validates markets via the Silo factory,
+/// and tracks positions via ERC4626 share accounting.
 contract SiloV2IsolatedMarketAdapter is AdapterBase, ISiloV2IsolatedMarketAdapter {
     /// @notice The Silo factory used to validate Silo v2 deployments.
     ISiloFactory internal immutable i_siloFactory;
-    /// @notice List of Silo markets this adapter currently has a non-zero allocation in.
+    /// @notice List of Silo markets with a non-zero allocation.
     ISilo[] internal s_silos;
 
     /// @notice Initializes the adapter with the parent Morpho Vault v2 and Silo factory.
@@ -100,7 +101,7 @@ contract SiloV2IsolatedMarketAdapter is AdapterBase, ISiloV2IsolatedMarketAdapte
         if (!i_siloFactory.isSilo(_silo)) revert SiloV2IsolatedMarketAdapter__InvalidSilo(_silo);
     }
 
-    /// @dev Updates the list of tracked silos this adapter has a non-zero position in.
+    /// @dev Updates the list of tracked silos with non-zero allocations.
     /// @dev If `_newAllocation` becomes 0, the silo is removed from the list.
     /// @param _silo The Silo to add/remove, or no-op if already present and allocation remains non-zero.
     /// @param _oldAllocation The amount of assets held by the adapter for the Silo before the call.
@@ -141,7 +142,7 @@ contract SiloV2IsolatedMarketAdapter is AdapterBase, ISiloV2IsolatedMarketAdapte
         return address(i_siloFactory);
     }
 
-    /// @notice Gets the number of tracked silos this adapter has a non-zero position in.
+    /// @notice Gets the number of tracked silos with a non-zero position.
     /// @return The number of tracked silos.
     function getSilosListLength() external view returns (uint256) {
         return s_silos.length;

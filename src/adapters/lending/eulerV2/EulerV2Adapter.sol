@@ -9,8 +9,8 @@ import { AdapterBase } from "@src/adapterBase/AdapterBase.sol";
 
 /// @title EulerV2Adapter.
 /// @author mgnfy-view.
-/// @notice Euler v2 adapter for Morpho vault v2. This adapter uses two functions `supply` and
-/// `withdraw` to allocate to and deallocate from Euler v2 vaults respectively.
+/// @notice Morpho Vault v2 adapter that allocates assets to Euler v2 vaults using deposit/withdraw.
+/// @dev Positions are tracked via vault shares and validated against the EVault factory.
 contract EulerV2Adapter is AdapterBase, IEulerV2Adapter {
     /// @dev The Euler v2 vault factory that deploys Euler vault proxies.
     IEVaultFactory internal immutable i_evaultFactory;
@@ -18,17 +18,18 @@ contract EulerV2Adapter is AdapterBase, IEulerV2Adapter {
     IEVault[] internal s_vaults;
 
     /// @dev Initializes the contract.
-    /// @param _morphoVaultV2 The Morpho vault v2 contract.
+    /// @param _morphoVaultV2 The Morpho Vault v2 contract.
     /// @param _factory The Euler v2 vault factory that deploys Euler vault proxies.
     constructor(address _morphoVaultV2, address _factory) AdapterBase(_morphoVaultV2) {
         i_evaultFactory = IEVaultFactory(_factory);
     }
 
     /// @notice Supplies assets to the given Euler v2 vault.
+    /// @dev `_data` must be `abi.encode(address vaultAddr)`.
     /// @param _data Abi encoded vault address.
     /// @param _assets The amount of assets to supply.
     /// @return A list of IDs associated with the Euler v2 vault.
-    /// @return The delta change in the amount of assets held by this adapter.
+    /// @return The delta change in the amount of assets held by this adapter for the vault.
     function allocate(bytes memory _data, uint256 _assets, bytes4, address)
         external
         returns (bytes32[] memory, int256)
@@ -54,11 +55,12 @@ contract EulerV2Adapter is AdapterBase, IEulerV2Adapter {
         return (getIds(vaultAddr), int256(newAllocation) - int256(oldAllocation));
     }
 
-    /// @notice Withdraws assets from the given Euler v2 pool.
-    /// @param _data Abi encoded Euler v2 pool address.
+    /// @notice Withdraws assets from the given Euler v2 vault.
+    /// @dev `_data` must be `abi.encode(address vaultAddr)`.
+    /// @param _data Abi encoded Euler v2 vault address.
     /// @param _assets The amount of assets to withdraw.
-    /// @return A list of IDs associated with the Euler v2 pool.
-    /// @return The delta change in the amount of assets held by this adapter.
+    /// @return A list of IDs associated with the Euler v2 vault.
+    /// @return The delta change in the amount of assets held by this adapter for the vault.
     function deallocate(
         bytes memory _data,
         uint256 _assets,
@@ -88,8 +90,8 @@ contract EulerV2Adapter is AdapterBase, IEulerV2Adapter {
         return (getIds(vaultAddr), int256(newAllocation) - int256(oldAllocation));
     }
 
-    /// @dev Reverts if the given EVault is not a valid one. An EVault is not valid if it
-    /// was not deployed by the trusted EVault factory.
+    /// @dev Reverts if the given EVault is not a valid one. An EVault is valid when it
+    /// was deployed by the configured EVault factory.
     /// @param _vault The Euler v2 vault.
     function _requireValidEVault(IEVault _vault) internal view {
         if (!i_evaultFactory.isProxy(address(_vault))) {
@@ -97,9 +99,8 @@ contract EulerV2Adapter is AdapterBase, IEulerV2Adapter {
         }
     }
 
-    /// @dev Updates the list of Euler v2 vaults the adapter has supplied to. If the allocation to a
-    /// pool becomes 0, the pool is popped from the list.
-    /// @param _vault The vault to add/pop. Or no-op if allocation is greater than 0 and the vaullt address
+    /// @dev Updates the list of Euler v2 vaults with a non-zero allocation.
+    /// @param _vault The vault to add/pop. Or no-op if allocation is greater than 0 and the vault address
     /// is already in the list.
     /// @param _oldAllocation The amount of assets held by the adapter in the given pool before the
     /// allocate/deallocate call.
@@ -121,8 +122,8 @@ contract EulerV2Adapter is AdapterBase, IEulerV2Adapter {
         }
     }
 
-    /// @notice Gets the total amount of assets held by this adapter in Euler v2 pools.
-    /// @return Real assets held by this adapter in Euler v2 pools.
+    /// @notice Gets the total amount of assets held by this adapter across tracked Euler v2 vaults.
+    /// @return Real assets held by this adapter in Euler v2 vaults.
     function realAssets() external view returns (uint256) {
         uint256 vaultAddressesArrayLength = s_vaults.length;
         uint256 amountRealAssets;
@@ -135,26 +136,26 @@ contract EulerV2Adapter is AdapterBase, IEulerV2Adapter {
         return amountRealAssets;
     }
 
-    /// @notice Gets the EVault factory address.
+    /// @notice Gets the EVault factory address used for validation.
     /// @return The EVault factory address.
     function getEVaultFactory() external view returns (address) {
         return address(i_evaultFactory);
     }
 
-    /// @notice Gets the number of vaults this adapter has supplied tokens to.
-    /// @return The number of vaults this adapter has supplied tokens to.
+    /// @notice Gets the number of tracked vaults with non-zero allocation.
+    /// @return The number of tracked vaults.
     function getVaultsListLength() external view returns (uint256) {
         return s_vaults.length;
     }
 
-    /// @notice Gets the vault address at the given index in the active vaults list.
+    /// @notice Gets the vault address at the given index in the tracked vaults list.
     /// @param _index The array index.
     /// @return The vault address at the given index.
     function getVault(uint256 _index) external view returns (address) {
         return address(s_vaults[_index]);
     }
 
-    /// @notice Gets all the IDs associated with the given Euler v2 pool.
+    /// @notice Gets all the IDs associated with the given Euler v2 vault.
     /// @param _vault The Euler v2 vault address.
     /// @return A list of bytes32 IDs.
     function getIds(address _vault) public view returns (bytes32[] memory) {
@@ -165,9 +166,10 @@ contract EulerV2Adapter is AdapterBase, IEulerV2Adapter {
         return ids;
     }
 
-    /// @notice Gets the assets allocated to the given EUler v2 vault.
+    /// @notice Gets the assets allocated to the given Euler v2 vault according to the parent vault.
+    /// @dev This value is updated by the parent vault at the end of allocate/deallocate calls.
     /// @param _vault The Euler v2 vault address.
-    /// @return The amount allocated to the comet instance.
+    /// @return The amount allocated to the vault.
     function getAllocation(address _vault) public view returns (uint256) {
         return i_morphoVaultV2.allocation(getIds(_vault)[1]);
     }
