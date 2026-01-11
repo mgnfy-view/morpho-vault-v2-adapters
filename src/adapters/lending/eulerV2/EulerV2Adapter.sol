@@ -29,12 +29,7 @@ contract EulerV2Adapter is AdapterBase, IEulerV2Adapter {
     /// @param _assets The amount of assets to supply.
     /// @return A list of IDs associated with the Euler v2 vault.
     /// @return The delta change in the amount of assets held by this adapter.
-    function allocate(
-        bytes memory _data,
-        uint256 _assets,
-        bytes4,
-        address
-    )
+    function allocate(bytes memory _data, uint256 _assets, bytes4, address)
         external
         returns (bytes32[] memory, int256)
     {
@@ -115,7 +110,7 @@ contract EulerV2Adapter is AdapterBase, IEulerV2Adapter {
 
         if (_oldAllocation > 0 && _newAllocation == 0) {
             for (uint256 i = 0; i < vaultAddressesArrayLength; i++) {
-                if (s_vaults[i] == _vault) {
+                if (address(s_vaults[i]) == address(_vault)) {
                     s_vaults[i] = s_vaults[vaultAddressesArrayLength - 1];
                     s_vaults.pop();
                     break;

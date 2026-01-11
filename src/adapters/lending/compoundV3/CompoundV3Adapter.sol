@@ -30,12 +30,7 @@ contract CompoundV3Adapter is AdapterBase, ICompoundV3Adapter {
     /// @param _assets The amount of assets to supply.
     /// @return A list of IDs associated with the Compound v3 comet instance.
     /// @return The delta change in the amount of assets held by this adapter.
-    function allocate(
-        bytes memory _data,
-        uint256 _assets,
-        bytes4,
-        address
-    )
+    function allocate(bytes memory _data, uint256 _assets, bytes4, address)
         external
         returns (bytes32[] memory, int256)
     {
@@ -115,7 +110,7 @@ contract CompoundV3Adapter is AdapterBase, ICompoundV3Adapter {
 
         if (_oldAllocation > 0 && _newAllocation == 0) {
             for (uint256 i = 0; i < cometAddressesArrayLength; i++) {
-                if (s_comets[i] == _comet) {
+                if (address(s_comets[i]) == address(_comet)) {
                     s_comets[i] = s_comets[cometAddressesArrayLength - 1];
                     s_comets.pop();
                     break;
