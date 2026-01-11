@@ -3,7 +3,9 @@ pragma solidity ^0.8.20;
 
 import { ISiloV2CommonAdapterFactory } from "@src/adapters/lending/siloV2/interfaces/ISiloV2CommonAdapterFactory.sol";
 
-import { SiloV2IsolatedMarketAdapter } from "@src/adapters/lending/siloV2/isolatedMarket/SiloV2IsolatedMarketAdapter.sol";
+import {
+    SiloV2IsolatedMarketAdapter
+} from "@src/adapters/lending/siloV2/isolatedMarket/SiloV2IsolatedMarketAdapter.sol";
 import { SiloV2ManagedVaultAdapter } from "@src/adapters/lending/siloV2/managedVault/SiloV2ManagedVaultAdapter.sol";
 
 /// @title SiloV2CommonAdapterFactory.
