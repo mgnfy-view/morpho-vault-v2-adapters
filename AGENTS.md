@@ -20,22 +20,12 @@
 
 ## Coding Style & Naming Conventions
 
-- Solidity formatting is managed by `forge fmt` with 4-space indentation and 120-char lines (see `foundry.toml`).
-- Imports are sorted and use double quotes; avoid manual formatting drift.
-- Interfaces use the `I` prefix (e.g., `IAdapterBase`); contracts use PascalCase.
-- Use `src/adapters/lending/<protocol>/` only for lending adapters. For other protocol types, use `src/adapters/<category>/<protocol>/`.
-- New adapters should follow existing folder naming, e.g., `src/adapters/lending/<protocol>/`.
-
-## Natspec Conventions
-
-- Always use `///`-style Natspec comments on contracts, functions, and public state.
+Follow `constraints/solidity-style.md` for formatting, naming, and NatSpec rules.
+Use `src/adapters/lending/<protocol>/` only for lending adapters; other protocol types go under `src/adapters/<category>/<protocol>/`.
 
 ## Testing Guidelines
 
-- Tests are written in Foundry and live under `test/`.
-- Test files use the `*.t.sol` suffix (e.g., `Allocate.t.sol`, `Factory.t.sol`).
-- Prefer extending existing base test utilities in `test/**/utils/` when adding new adapters.
-- Run `make ftest` before opening a PR; update snapshots if gas usage changes.
+Unit-testing rules and layout live in `constraints/testing.md`. Run `make ftest` before opening a PR.
 
 ## Commit & Pull Request Guidelines
 
@@ -45,5 +35,5 @@
 
 ## Security & Configuration Tips
 
-- The Makefile loads `.env`; keep RPC URLs and private keys out of version control.
-- Treat adapter changes as protocol-critical: add tests for edge cases and reverts.
+The Makefile loads `.env`; keep RPC URLs and private keys out of version control.
+For security review references, see `constraints/security-review.md`.
