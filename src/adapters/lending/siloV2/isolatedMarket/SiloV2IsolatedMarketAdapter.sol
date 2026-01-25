@@ -3,7 +3,7 @@ pragma solidity ^0.8.20;
 
 import { AdapterBase } from "@src/adapterBase/AdapterBase.sol";
 
-import { ISilo } from "@src/adapters/lending/siloV2/commonLib/interfaces/ISilo.sol";
+import { IERC4626 } from "@openzeppelin-contracts-5.3.0/interfaces/IERC4626.sol";
 import { ISiloFactory } from "@src/adapters/lending/siloV2/commonLib/interfaces/ISiloFactory.sol";
 import {
     ISiloV2IsolatedMarketAdapter
@@ -18,7 +18,7 @@ contract SiloV2IsolatedMarketAdapter is AdapterBase, ISiloV2IsolatedMarketAdapte
     /// @notice The Silo factory used to validate Silo v2 deployments.
     ISiloFactory internal immutable i_siloFactory;
     /// @notice List of Silo markets with a non-zero allocation.
-    ISilo[] internal s_silos;
+    IERC4626[] internal s_silos;
 
     /// @notice Initializes the adapter with the parent Morpho Vault v2 and Silo factory.
     /// @param _morphoVaultV2 The Morpho Vault v2 address that owns this adapter.
@@ -42,13 +42,13 @@ contract SiloV2IsolatedMarketAdapter is AdapterBase, ISiloV2IsolatedMarketAdapte
         _requireCallerIsMorphoVault(msg.sender);
 
         (address siloAddr) = abi.decode(_data, (address));
-        ISilo silo = ISilo(siloAddr);
+        IERC4626 silo = IERC4626(siloAddr);
 
         _validateIsolatedMarket(siloAddr);
 
         if (_assets > 0) {
             i_asset.approve(siloAddr, _assets);
-            silo.deposit(address(i_asset), _assets, false);
+            silo.deposit(_assets, address(this));
         }
 
         uint256 oldAllocation = getAllocation(siloAddr);
@@ -79,12 +79,12 @@ contract SiloV2IsolatedMarketAdapter is AdapterBase, ISiloV2IsolatedMarketAdapte
         _requireCallerIsMorphoVault(msg.sender);
 
         (address siloAddr) = abi.decode(_data, (address));
-        ISilo silo = ISilo(siloAddr);
+        IERC4626 silo = IERC4626(siloAddr);
 
         _validateIsolatedMarket(siloAddr);
 
         if (_assets > 0) {
-            silo.withdraw(address(i_asset), _assets, false);
+            silo.withdraw(_assets, address(this), address(this));
         }
 
         uint256 oldAllocation = getAllocation(siloAddr);
@@ -106,7 +106,7 @@ contract SiloV2IsolatedMarketAdapter is AdapterBase, ISiloV2IsolatedMarketAdapte
     /// @param _silo The Silo to add/remove, or no-op if already present and allocation remains non-zero.
     /// @param _oldAllocation The amount of assets held by the adapter for the Silo before the call.
     /// @param _newAllocation The amount of assets held by the adapter for the Silo after the call.
-    function _updateSilosList(ISilo _silo, uint256 _oldAllocation, uint256 _newAllocation) internal {
+    function _updateSilosList(IERC4626 _silo, uint256 _oldAllocation, uint256 _newAllocation) internal {
         uint256 silosLength = s_silos.length;
 
         if (_oldAllocation > 0 && _newAllocation == 0) {
