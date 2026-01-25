@@ -15,9 +15,6 @@ on:
       - 'soldeer.lock'
   workflow_dispatch:
 
-env:
-  FOUNDRY_PROFILE: ci
-
 jobs:
   check:
     strategy:
@@ -36,15 +33,15 @@ jobs:
 
       - name: Install dependencies
         run: |
-          forge soldeer install
+          make install
 
       - name: Run Forge build
         run: |
           forge --version
-          forge build
+          make fbuild
 
       - name: Run Forge tests
         env:
           ETHEREUM_MAINNET_RPC_URL: ${{ secrets.ETHEREUM_MAINNET_RPC_URL }}
         run: |
-          forge test -vvv
+          make ftest
