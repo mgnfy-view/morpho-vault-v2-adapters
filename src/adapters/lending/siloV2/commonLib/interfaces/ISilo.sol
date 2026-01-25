@@ -6,8 +6,6 @@ import { IERC4626 } from "@openzeppelin-contracts-5.3.0/token/ERC20/extensions/E
 
 /// @notice Core Silo market interface for isolated lending markets.
 interface ISilo is IERC4626 {
-    /// @notice Returns the underlying asset of this silo vault.
-    function siloAsset() external view returns (address);
     /// @notice Accrues interest for a specific asset.
     function accrueInterest(address _asset) external;
     /// @notice Deposit assets into the silo.
