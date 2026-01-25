@@ -3,8 +3,7 @@
 ## Purpose
 
 Improve, complete, and normalize **NatSpec documentation** based on the
-final implemented Solidity code, and generate **protocol-level integration
-documentation** for external consumers.
+final implemented Solidity code, and generate **AUDIT.md** for adapters.
 
 This skill does not invent behavior. It documents what already exists.
 
@@ -45,41 +44,20 @@ NatSpec must:
 
 No placeholder or outdated NatSpec may remain after this step.
 
-### 2) Generate protocol README
+### 2) Generate audit documentation
 
-Generate a `README.md` at:
+Generate an `AUDIT.md` at:
 
-`src/adapters/<category>/<protocol>/README.md`
+`src/adapters/<category>/<protocol>/AUDIT.md`
 
-This file must include:
-- high-level overview of the protocol vault
-- supported actions and user flows
-- role and access-control summary
-- upgradeability model (if applicable)
-- high-level risks and assumptions
-- pointers to relevant contracts and libraries
-
-The README is intended for:
-- contributors
-- auditors
-- internal reviewers
-
-### 3) Generate integration documentation
-
-Generate an `INTEGRATION.md` at:
-
-`src/adapters/<category>/<protocol>/INTEGRATION.md`
-
-This file must be written for **external integrators** and include:
-- how to interact with the vault correctly
-- required call ordering and expectations
-- token behavior assumptions (ERC20 quirks)
-- approval and allowance requirements
-- rounding and precision notes
-- events integrators should rely on
-- common integration footguns and how to avoid them
-
-No implementation details that are irrelevant to integrators should be included.
+This file must be written **for auditors** and include:
+- scope and system overview
+- architecture overview (textual)
+- trust and threat assumptions
+- invariant list with rationale
+- unit test coverage summary
+- known risks, limitations, and accepted trade-offs
+- links or pointers to relevant contracts, tests, and docs
 
 ## Constraints and Safety Rules
 
@@ -95,8 +73,7 @@ If code behavior is unclear or risky, it must be documented explicitly.
 ## Outputs
 
 - Improved and completed NatSpec in Solidity contracts
-- `README.md` for the protocol vault
-- `INTEGRATION.md` for external integrators
+- `AUDIT.md` for the adapter
 
 ## Verification
 

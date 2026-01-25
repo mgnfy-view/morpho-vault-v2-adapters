@@ -2,8 +2,8 @@
 
 ## Purpose
 
-Implement Solidity function(s) or modules directly from a provided
-global specification and inline comment-level specification,
+Implement Solidity function(s) or modules directly from an inline
+comment-level specification,
 following a deliberate implementation-first workflow.
 
 This skill exists to translate intent into code while:
@@ -17,7 +17,6 @@ Completeness and optimization are secondary to faithful implementation.
 ## When to Invoke
 
 - A contract has already been scaffolded
-- A global spec exists (e.g. docs, protocol README)
 - Inline comments describe intended behavior or invariants
 - The logic is conceptually understood but not yet encoded in Solidity
 - You want a stable implementation baseline before:
@@ -27,7 +26,6 @@ Completeness and optimization are secondary to faithful implementation.
 
 ## Inputs Required
 
-- Global specification reference (document, README, or summary)
 - Target contract(s) and function signature(s)
 - Inline comment-level spec (bullet points preferred)
 - Explicit assumptions about:
@@ -42,7 +40,7 @@ If assumptions are missing or ambiguous, they must be surfaced explicitly.
 
 ### 1) Translate the spec into implementation intent
 
-- Restate the spec in concrete implementation terms:
+- Restate the inline spec in concrete implementation terms:
   - inputs to outputs
   - state before to state after
 - Identify:
