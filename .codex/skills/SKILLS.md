@@ -83,8 +83,8 @@ Work is considered complete only if:
 
 ## Skills Layout
 
-- skills/<skill-name>/SKILL.md
-- skills/<skill-name>/prompt.txt (optional canonical prompt)
-- constraints/*.md
-- templates/*
-- examples/*
+- .codex/skills/<skill-name>/SKILL.md
+- .codex/skills/<skill-name>/prompt.txt (optional canonical prompt)
+- .codex/constraints/*.md
+- .codex/templates/*
+- .codex/examples/*

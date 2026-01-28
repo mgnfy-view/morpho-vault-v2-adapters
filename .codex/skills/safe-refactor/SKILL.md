@@ -1,3 +1,8 @@
+---
+name: safe-refactor
+description: Refactor non-upgradeable Solidity contracts for clarity and maintainability without changing observable behavior, interfaces, or tests. Use when behavior is locked and you need structural cleanup.
+---
+
 # Skill: safe-refactor
 
 ## Purpose
@@ -45,7 +50,7 @@ Refactors must preserve:
 - Must not introduce or remove external calls
 - Must not introduce new dependencies
 - Must not modify storage semantics
-- Must comply with all rules in `constraints/solidity-style.md`
+- Must comply with all rules in `.codex/constraints/solidity-style.md`
 - Tests must pass **unchanged**
 - No new tests may be added as justification for behavior changes
 

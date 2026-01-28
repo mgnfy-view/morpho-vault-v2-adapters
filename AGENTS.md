@@ -20,12 +20,12 @@
 
 ## Coding Style & Naming Conventions
 
-Follow `constraints/solidity-style.md` for formatting, naming, and NatSpec rules.
+Follow `.codex/constraints/solidity-style.md` for formatting, naming, and NatSpec rules.
 Use `src/adapters/lending/<protocol>/` only for lending adapters; other protocol types go under `src/adapters/<category>/<protocol>/`.
 
 ## Testing Guidelines
 
-Unit-testing rules and layout live in `constraints/testing.md`. Run `make ftest` before opening a PR.
+Unit-testing rules and layout live in `.codex/constraints/testing.md`. Run `make ftest` before opening a PR.
 
 ## Commit & Pull Request Guidelines
 
@@ -36,4 +36,4 @@ Unit-testing rules and layout live in `constraints/testing.md`. Run `make ftest`
 ## Security & Configuration Tips
 
 The Makefile loads `.env`; keep RPC URLs and private keys out of version control.
-For security review references, see `constraints/security-review.md`.
+For security review references, see `.codex/constraints/security-review.md`.

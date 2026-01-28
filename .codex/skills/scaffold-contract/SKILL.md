@@ -1,3 +1,8 @@
+---
+name: scaffold-contract
+description: Scaffold new Solidity contract or module skeletons with NatSpec and audit-friendly structure without implementing behavior. Use when starting new modules, adapters, or contracts.
+---
+
 # Skill: scaffold-contract
 
 ## Purpose
@@ -31,7 +36,7 @@ The generated contract must include:
 
 - SPDX identifier
 - Solidity pragma
-- Imports following `constraints/solidity-style.md`
+- Imports following `.codex/constraints/solidity-style.md`
 - Contract declaration
 - Explicit sections for:
   - constants
@@ -68,7 +73,7 @@ TODOs must include context explaining what is missing and why.
 - Must not generate or modify any tests
 - Must not introduce external calls
 - Must not assume ERC20 compliance
-- Must comply with all rules in `constraints/solidity-style.md`
+- Must comply with all rules in `.codex/constraints/solidity-style.md`
 - Storage layout for upgradeable contracts must be:
   - explicit
   - append-only

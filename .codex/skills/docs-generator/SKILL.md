@@ -1,3 +1,8 @@
+---
+name: docs-generator
+description: Improve NatSpec documentation and generate adapter AUDIT.md files based on existing Solidity implementations. Use after implementation to document behavior for audits and releases.
+---
+
 # Skill: docs-generator
 
 ## Purpose
@@ -65,7 +70,7 @@ This file must be written **for auditors** and include:
 - Must not contradict implemented behavior
 - Must not describe behavior not present in code
 - Must not modify business logic
-- Must comply with all rules in `constraints/solidity-style.md`
+- Must comply with all rules in `.codex/constraints/solidity-style.md`
 - Documentation must reflect the current codebase exactly
 
 If code behavior is unclear or risky, it must be documented explicitly.

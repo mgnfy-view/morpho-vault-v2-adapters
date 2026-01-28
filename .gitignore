@@ -17,4 +17,4 @@ docs/
 dependencies/*
 
 # Codex config
-.codex
+.codex/config.toml

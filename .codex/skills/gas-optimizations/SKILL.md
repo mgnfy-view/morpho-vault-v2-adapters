@@ -1,3 +1,8 @@
+---
+name: gas-optimization-review
+description: Identify safe, justified gas optimizations in Solidity code without changing behavior. Use after correctness and tests are established to propose performance improvements.
+---
+
 # Skill: gas-optimization-review
 
 ## Purpose
@@ -68,7 +73,7 @@ Risky optimizations must be clearly labeled and justified.
 - Must not weaken safety checks or invariants
 - Must not obscure logic for marginal gas gains
 - Must not introduce assembly unless explicitly justified
-- Must comply with all rules in `constraints/solidity-style.md`
+- Must comply with all rules in `.codex/constraints/solidity-style.md`
 
 If an optimization risks correctness, it must be presented as optional and high-risk.
 

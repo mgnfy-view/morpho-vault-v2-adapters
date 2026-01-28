@@ -249,7 +249,7 @@ All contracts should be structured in the following order:
 
 Testing conventions are defined in:
 
-* `constraints/testing.md`
+* `.codex/constraints/testing.md`
 
 ## 13) Scripts
 

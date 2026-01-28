@@ -1,3 +1,8 @@
+---
+name: spec-to-implementation
+description: Implement Solidity functions from inline comment-level specs while updating NatSpec and surfacing assumptions. Use after scaffolding to produce faithful, audit-ready implementations before tests or refactors.
+---
+
 # Skill: spec-to-implementation
 
 ## Purpose
@@ -97,7 +102,7 @@ After implementation is completed and **explicitly confirmed by the user or Code
 
 - Must not write or modify tests  
   (tests are generated via `implementation-to-tests`)
-- Must comply with all rules in `constraints/solidity-style.md`
+- Must comply with all rules in `.codex/constraints/solidity-style.md`
 - State updates must precede external calls
 - Custom errors must be used instead of revert strings
 - ERC20 non-compliance must be assumed

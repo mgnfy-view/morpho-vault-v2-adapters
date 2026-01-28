@@ -1,3 +1,8 @@
+---
+name: implementation-to-tests
+description: Generate scenario-based Foundry unit tests from existing Solidity implementations to lock observable behavior before refactors, optimizations, upgrades, or audits. Use when implementations exist but tests are missing or insufficient.
+---
+
 # Skill: implementation-to-tests
 
 ## Purpose
@@ -8,7 +13,7 @@ lock **observable behavior** before refactoring, optimization, or audit.
 This skill converts implemented code into:
 - unit guarantees
 
-in strict compliance with `constraints/testing.md`.
+in strict compliance with `.codex/constraints/testing.md`.
 
 ## When to Invoke
 
@@ -40,7 +45,7 @@ From the implementation, identify:
 
 ### 2) Use unit tests only
 
-Follow `constraints/testing.md` for directory layout and unit-test rules.
+Follow `.codex/constraints/testing.md` for directory layout and unit-test rules.
 
 ### 3) Generate scenario-based test files
 
@@ -83,7 +88,7 @@ The skill must ensure unit tests cover:
 
 - `forge test` passes
 - Tests fail on meaningful behavior changes
-- Tests comply with `constraints/testing.md`
+- Tests comply with `.codex/constraints/testing.md`
 
 ## Example Prompts
 

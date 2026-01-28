@@ -1,3 +1,8 @@
+---
+name: defi-threat-model
+description: Produce structured DeFi threat models covering actors, trust assumptions, attacker goals, and critical attack surfaces. Use during design or before audits and invariant work for protocols and integrations.
+---
+
 # Skill: defi-threat-model
 
 ## Purpose

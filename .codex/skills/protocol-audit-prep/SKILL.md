@@ -1,3 +1,8 @@
+---
+name: protocol-audit-prep
+description: Prepare auditor-facing evidence bundles and AUDIT.md for protocol vaults without changing code. Use when an audit is upcoming and you need structured context, invariants, and test coverage summaries.
+---
+
 # Skill: protocol-audit-prep
 
 ## Purpose
@@ -28,7 +33,7 @@ This skill does not change code. It makes the system legible to auditors.
 - Derived invariants
 - Test coverage summary (unit)
 - External security references may be used as a completeness and pattern
-  cross-check (see `constraints/security-review.md`)
+  cross-check (see `.codex/constraints/security-review.md`)
 
 ## Actions
 
@@ -96,7 +101,7 @@ Do not silently omit gaps.
 - Must not invent guarantees or properties
 - Must not contradict implemented behavior
 - Must not hide or downplay known risks
-- Must comply with all rules in `constraints/security-review.md`
+- Must comply with all rules in `.codex/constraints/security-review.md`
 - Documentation must be accurate as of the current commit
 
 If behavior is unclear or risky, it must be documented explicitly.

@@ -1,3 +1,8 @@
+---
+name: security-review
+description: Perform structured smart-contract security reviews of implemented Solidity code with actionable findings and remediation guidance. Use for security-sensitive changes, audit prep, or final review.
+---
+
 # Skill: security-review
 
 ## Purpose
@@ -25,7 +30,7 @@ unless explicitly requested.
 - Known assumptions and constraints
 - Test coverage summary (unit)
 - External security references may be used as a completeness and pattern
-  cross-check (see `constraints/security-review.md`)
+  cross-check (see `.codex/constraints/security-review.md`)
 
 
 Missing inputs must be explicitly noted as review limitations.
@@ -85,7 +90,7 @@ For each finding:
 - Must not provide exploit code for live or real-world protocols
 - Must not modify Solidity code unless explicitly requested
 - Must state uncertainty and assumptions clearly
-- Must comply with all rules in `constraints/security-review.md`
+- Must comply with all rules in `.codex/constraints/security-review.md`
 
 ## Outputs
 
